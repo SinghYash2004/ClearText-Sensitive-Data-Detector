@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClearText — Sensitive Data Detector</title>
+<style>
+:root{--bg:#f4f6fa;--panel:#fff;--ink:#182230;--muted:#687586;--line:#e1e7ef;--blue:#3268d6;--red:#c73e4d;--shadow:0 8px 26px #1822300b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px/1.5 system-ui,Segoe UI,sans-serif;color:var(--ink)}header{background:white;border-bottom:1px solid var(--line);padding:17px clamp(16px,4vw,54px);display:flex;justify-content:space-between;align-items:center}.brand{font-size:19px;font-weight:800}.brand small{display:block;font-size:11px;color:var(--muted);font-weight:500}.pill{background:#eaf8f0;color:#16794b;padding:6px 10px;border-radius:20px;font-size:11px}main{max-width:1250px;margin:auto;padding:32px clamp(16px,4vw,54px)}h1{font-size:clamp(26px,3vw,36px);line-height:1.2;letter-spacing:-1px;margin:0 0 8px}.intro{color:var(--muted);max-width:760px;margin:0 0 24px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.stat,.panel{background:white;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.stat{padding:15px}.stat small{color:var(--muted)}.num{font-size:27px;font-weight:800}.workspace{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{overflow:hidden}.head{padding:17px 19px;border-bottom:1px solid var(--line);font-weight:750}.sub{display:block;color:var(--muted);font-weight:400;font-size:12px}.body{padding:18px}textarea{width:100%;min-height:280px;resize:vertical;border:1px solid var(--line);border-radius:9px;padding:13px;font:13px/1.7 ui-monospace,monospace;outline:none}textarea:focus{border-color:#8eabe9}.actions,.samples,.checks{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}button,.filebtn{border:1px solid var(--line);border-radius:8px;background:white;padding:9px 11px;font:600 12px system-ui;cursor:pointer}button:hover,.filebtn:hover{background:#f7f9ff}.primary{background:var(--blue);color:white;border-color:var(--blue)}.primary:hover{background:#2458c2}.sample{background:#f6f8fb}.checks label{font-size:12px;display:flex;gap:5px;align-items:center}.checks input{accent-color:var(--blue)}.preview{min-height:280px;border:1px solid var(--line);border-radius:9px;background:#fbfcfe;padding:13px;white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.9 ui-monospace,monospace}.mark{border-radius:3px;padding:2px;background:#e8efff;border-bottom:2px solid #4c72d8}.mark.PHONE{background:#fff0d6;border-color:#d3912a}.mark.IDENTIFIER{background:#fce7eb;border-color:#ce5265}.findings{display:grid;gap:8px;margin-top:12px}.finding{display:grid;grid-template-columns:20px 1fr auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:10px}.finding input{accent-color:var(--blue)}.type{font-size:10px;font-weight:800;color:#315dc1}.value{font:12px ui-monospace,monospace;overflow-wrap:anywhere}.confidence{font-size:10px;color:var(--muted)}.options{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.options label{font-size:12px;font-weight:700}.options select{margin-left:5px;padding:7px;border:1px solid var(--line);border-radius:6px}.note{font-size:11px;color:var(--muted);margin-top:14px}.empty{border:1px dashed var(--line);padding:16px;text-align:center;color:var(--muted);border-radius:8px;font-size:12px}.legend{font-size:11px;color:var(--muted);margin:10px 0}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#172b4d;color:white;padding:10px 15px;border-radius:9px;display:none;font-size:12px}@media(max-width:800px){.workspace{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:450px){.pill{font-size:0}.pill:after{content:'Local API';font-size:11px}.options{display:grid}}
+</style>
+</head>
+<body>
+<header><div class="brand">⌕ ClearText<small>Sensitive data review workspace</small></div><span class="pill">● Spring Boot API</span></header>
+<main>
+<h1>Find sensitive data before it leaves your desk.</h1>
+<p class="intro">Upload a text file or load a sample, scan for email addresses, phone numbers and identifier-like values, review matches and export a redacted copy.</p>
+<div class="stats">
+ <div class="stat"><small>Matches found</small><div class="num" id="total">0</div></div>
+ <div class="stat"><small>Emails</small><div class="num" id="emails">0</div></div>
+ <div class="stat"><small>Phone numbers</small><div class="num" id="phones">0</div></div>
+ <div class="stat"><small>Identifiers</small><div class="num" id="ids">0</div></div>
+</div>
+<div class="workspace">
+<section class="panel"><div class="head">1. Source text<span class="sub">Paste text or select a local .txt file</span></div><div class="body">
+<textarea id="source" placeholder="Paste document content here…"></textarea>
+<div class="actions"><label class="filebtn">Choose .txt file<input type="file" id="file" accept=".txt,text/plain" hidden></label><button id="clear">Clear</button></div>
+<div class="samples"><button class="sample" data-sample="email">Email thread</button><button class="sample" data-sample="hr">HR record</button><button class="sample" data-sample="mixed">Mixed document</button></div>
+<div class="checks"><label><input id="emailRule" type="checkbox" checked>Email</label><label><input id="phoneRule" type="checkbox" checked>Phone</label><label><input id="idRule" type="checkbox" checked>Identifier</label></div>
+<button class="primary" id="scan" style="width:100%">Scan document ↗</button>
+<p class="note">Text is sent to your local Spring Boot server at localhost. Demo regex rules can produce false positives or miss unusual formats.</p>
+</div></section>
+<section class="panel"><div class="head">2. Review & redact<span class="sub" id="state">Not scanned</span></div><div class="body">
+<div id="preview" class="preview">Scan a sample or your text to preview detections.</div>
+<div class="legend">Blue: email · Amber: phone · Pink: identifier</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px"><strong>Detected matches</strong><span id="selectedCount" class="confidence">0 selected</span></div>
+<div id="findings" class="findings"><div class="empty">No scan results yet.</div></div>
+<div class="options"><label>Style <select id="style"><option value="BLOCK">[REDACTED]</option><option value="TYPE">[REDACTED: TYPE]</option><option value="MASK">Mask characters (••••)</option></select></label><label>ID label <select id="idLabel"><option>IDENTIFIER</option><option>ID</option><option>SENSITIVE VALUE</option></select></label></div>
+<div class="actions"><button id="all">Select all</button><button id="none">Select none</button><button class="primary" id="redact">Apply redactions</button><button id="export">Export .txt</button></div>
+<p class="note">Redaction creates a preview/export copy. It does not overwrite the source text.</p>
+</div></section>
+</div>
+<div class="panel" style="margin-top:16px"><div class="head">Technical approach</div><div class="body"><b>Detect:</b> Java regex rules in a Spring Boot service. &nbsp; <b>Review:</b> Frontend displays match types and offsets. &nbsp; <b>Redact:</b> Backend validates spans and replaces selected values. <p class="note">This is a demonstrator, not a production DLP system. Add PDF/DOCX parsing, labelled test data, precision/recall evaluation, authentication, audit controls and secure retention before real-world use.</p></div></div>
+</main><div class="toast" id="toast"></div>
+<script>
+const samples={
+email:`From: Priya Sharma <priya.sharma@example.com>
+To: Alex Morgan <alex.morgan@sample.org>
+Please call Priya at +1 (415) 555-0136 to confirm the delivery.
+Support desk: 020 7946 0958
+Thanks, Operations Team`,
+hr:`EMPLOYEE ONBOARDING SUMMARY
+Work email: jordan.lee@company.test
+Employee ID: EMP-48291
+Phone: +44 7700 900123
+Emergency contact: +1-202-555-0188
+Payroll reference: PAY-773204
+These are synthetic values for demo purposes.`,
+mixed:`CUSTOMER CASE NOTE — #CS-10482
+Customer email: dev.user+test@example.net
+Callback number: (212) 555-0199
+Account ID: ACCT-008173
+Reference number: 987654321
+All values are fictional sample data.`};
+const $=id=>document.getElementById(id);let matches=[],selected=new Set(),redactedText=null,scannedText='';
+function toast(s){$('toast').textContent=s;$('toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').style.display='none',2200)}
+async function api(path,data){const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!r.ok){const msg=await r.text();throw new Error(msg||`HTTP ${r.status}`)}return r.json()}
+function request(){return{text:$('source').value,detectEmails:$('emailRule').checked,detectPhones:$('phoneRule').checked,detectIdentifiers:$('idRule').checked}}
+async function scan(){const text=$('source').value;if(!text.trim()){toast('Add text or load a sample first.');return}try{$('scan').disabled=true;$('state').textContent='Scanning…';const data=await api('/api/scan',request());matches=data.matches;selected=new Set(matches.map(m=>m.index));scannedText=text;redactedText=null;render(data);$('state').textContent='Scanned by Spring Boot';toast(`Found ${data.totalMatches} matches.`)}catch(e){toast('API error: '+e.message)}finally{$('scan').disabled=false}}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(data){$('total').textContent=data.totalMatches;$('emails').textContent=data.emailCount;$('phones').textContent=data.phoneCount;$('ids').textContent=data.identifierCount;let html='',pos=0;for(const m of matches){html+=esc(scannedText.slice(pos,m.start))+`<mark class="mark ${m.type}" title="${m.type}">${esc(scannedText.slice(m.start,m.end))}</mark>`;pos=m.end}html+=esc(scannedText.slice(pos));$('preview').innerHTML=html||'<span class="confidence">No matches detected.</span>';
+const box=$('findings');box.innerHTML='';if(!matches.length)box.innerHTML='<div class="empty">No matches found. Try a different sample.</div>';matches.forEach(m=>{const row=document.createElement('label');row.className='finding';const cb=document.createElement('input');cb.type='checkbox';cb.checked=selected.has(m.index);cb.addEventListener('change',()=>{cb.checked?selected.add(m.index):selected.delete(m.index);count()});const detail=document.createElement('div');const typ=document.createElement('div');typ.className='type';typ.textContent=m.type;const val=document.createElement('div');val.className='value';val.textContent=m.value;detail.append(typ,val);const confidence=document.createElement('span');confidence.className='confidence';confidence.textContent=m.type==='EMAIL'?'Format match':m.type==='PHONE'?'Possible phone':'Heuristic';row.append(cb,detail,confidence);box.append(row)});count()}
+function count(){$('selectedCount').textContent=selected.size+' selected'}
+document.querySelectorAll('[data-sample]').forEach(b=>b.onclick=()=>{$('source').value=samples[b.dataset.sample];scan()});
+$('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(!f.name.toLowerCase().endsWith('.txt')){toast('Please select a .txt file.');return}if(f.size>1048576){toast('Please use a text file smaller than 1 MB.');return}$('source').value=await f.text();toast('File loaded. Click Scan document.')};
+$('scan').onclick=scan;
+$('clear').onclick=()=>{$('source').value='';matches=[];selected.clear();redactedText=null;$('preview').textContent='Scan a sample or your text to preview detections.';$('findings').innerHTML='<div class="empty">No scan results yet.</div>';['total','emails','phones','ids'].forEach(x=>$(x).textContent='0');$('state').textContent='Not scanned';count()};
+$('all').onclick=()=>{selected=new Set(matches.map(m=>m.index));render({totalMatches:matches.length,emailCount:matches.filter(m=>m.type==='EMAIL').length,phoneCount:matches.filter(m=>m.type==='PHONE').length,identifierCount:matches.filter(m=>m.type==='IDENTIFIER').length})};
+$('none').onclick=()=>{selected.clear();render({totalMatches:matches.length,emailCount:matches.filter(m=>m.type==='EMAIL').length,phoneCount:matches.filter(m=>m.type==='PHONE').length,identifierCount:matches.filter(m=>m.type==='IDENTIFIER').length})};
+$('redact').onclick=async()=>{if(!matches.length){toast('Scan first.');return}if(!selected.size){toast('Select at least one match.');return}try{const r=await api('/api/redact',{text:scannedText,matches,selectedIndexes:[...selected],style:$('style').value,identifierLabel:$('idLabel').value});redactedText=r.redactedText;$('preview').textContent=redactedText;$('state').textContent=`${r.redactedCount} values redacted`;toast(`Redacted ${r.redactedCount} matches.`)}catch(e){toast('Redaction error: '+e.message)}};
+$('export').onclick=()=>{const content=redactedText!==null?redactedText:scannedText||$('source').value;if(!content){toast('Nothing to export.');return}const url=URL.createObjectURL(new Blob([content],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=redactedText!==null?'redacted-document.txt':'document-text.txt';a.click();URL.revokeObjectURL(url);toast('Text file exported.')};
+</script>
+</body></html>

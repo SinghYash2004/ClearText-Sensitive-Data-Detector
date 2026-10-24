@@ -1,0 +1,10 @@
+com\cleartext\model\ScanResponse.class
+com\cleartext\controller\DetectorController.class
+com\cleartext\service\DetectionService.class
+com\cleartext\DetectorApplication.class
+com\cleartext\model\RedactResponse.class
+com\cleartext\model\DetectionType.class
+com\cleartext\model\ScanRequest.class
+com\cleartext\model\DetectedMatch.class
+com\cleartext\model\RedactRequest.class
+com\cleartext\service\RedactionService.class
