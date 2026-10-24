@@ -1,0 +1,10 @@
+C:\PROJECTS\cleartext-spring-boot\src\main\java\com\cleartext\controller\DetectorController.java
+C:\PROJECTS\cleartext-spring-boot\src\main\java\com\cleartext\DetectorApplication.java
+C:\PROJECTS\cleartext-spring-boot\src\main\java\com\cleartext\model\DetectedMatch.java
+C:\PROJECTS\cleartext-spring-boot\src\main\java\com\cleartext\model\DetectionType.java
+C:\PROJECTS\cleartext-spring-boot\src\main\java\com\cleartext\model\RedactRequest.java
+C:\PROJECTS\cleartext-spring-boot\src\main\java\com\cleartext\model\RedactResponse.java
+C:\PROJECTS\cleartext-spring-boot\src\main\java\com\cleartext\model\ScanRequest.java
+C:\PROJECTS\cleartext-spring-boot\src\main\java\com\cleartext\model\ScanResponse.java
+C:\PROJECTS\cleartext-spring-boot\src\main\java\com\cleartext\service\DetectionService.java
+C:\PROJECTS\cleartext-spring-boot\src\main\java\com\cleartext\service\RedactionService.java
